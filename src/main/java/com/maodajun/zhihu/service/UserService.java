@@ -6,8 +6,11 @@ import org.nutz.dao.Dao;
 import org.nutz.ioc.impl.PropertiesProxy;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
+import org.nutz.json.Json;
+import org.nutz.lang.Lang;
 import org.nutz.lang.segment.CharSegment;
 import org.nutz.lang.segment.Segment;
+import org.nutz.mapl.Mapl;
 
 import java.util.List;
 
@@ -25,10 +28,10 @@ public class UserService {
         Segment seg = new CharSegment(url);
         return seg.set("token",token).set("time",time).toString();
     }
-    public String followUrl (String token){
+    public String followUrl (String token,int page){
         String url = conf.get("zhihu.following");
         Segment seg = new CharSegment(url);
-        return seg.set("token",token).toString();
+        return seg.set("token",token).set("page",page).toString();
     }
     public String userUrl (String token){
         String url = conf.get("zhihu.user");
@@ -37,19 +40,21 @@ public class UserService {
     }
 
 
-    public User getUserBytoken(String token){
+    public Object getUserBytoken(String token){
         Object obj = httpTools.urlToJson(userUrl(token));
-
-
-        return null;
+        return obj;
     }
 
-    public List<User> following(String token){
-        Object obj = httpTools.urlToJson(followUrl(token));
-
-
-        return null;
+    public  Object  following(String token,int page){
+        Object obj = httpTools.urlToJson(followUrl(token,page));
+        return obj;
     }
+    public  Object  active(String token, long time){
+        Object obj = httpTools.urlToJson(activeUrl(token,time));
+        return obj;
+    }
+
+
 
     public List<User> oldMan(List<User> newman){
         Cnd cnd =Cnd.NEW();
