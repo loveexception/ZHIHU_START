@@ -3,113 +3,79 @@ package com.maodajun.zhihu.bean;
 import lombok.Data;
 import org.nutz.dao.entity.annotation.*;
 
-@Table("t_user")
+@Table("t_user_start")
 @Data
 public class User {
-    @Id
-    private long id;
+
+
     @Name
     private String url_token;
     @Column
     private String name;
-    @Column
-    private String avatar_url;
-    @Column
-    private String avatar_url_template;
-    @Column
-    private boolean is_org;
-    @Column
-    private String type;
-    @Column
-    private String url;
-    @Column
-    private String user_type;
-    @Column
-    private String headline;
-    @Column
-    private int is_active;
-    @Column
-    @ColDefine(type=ColType.TEXT)
-    private String description;
-    @Column
-    private int gender;
-    @Column
-    private boolean is_advertiser;
+
 
     @Column
-
+    private String is_active;
+    @Column
+    private String gender;
+    @Column
+    private String is_advertiser;
+    @Column
+    private String rename_days;
+    @Column
     private String message_thread_token;
     @Column
-    private boolean allow_message;
+    private String follower_count;
     @Column
-    private boolean is_following;
+    private String following_count;
     @Column
-    private boolean is_followed;
+    private String mutual_followees_count;
     @Column
-    private boolean is_blocking;
+    private String answer_count;
     @Column
-    private boolean is_blocked;
+    private String question_count;
     @Column
-    private boolean is_force_renamed;
+    private String commercial_question_count;
     @Column
-    private long follower_count;
+    private String articles_count;
     @Column
-    private int following_count;
+    private String favorite_count;
     @Column
-    private int mutual_followees_count;
+    private String favorited_count;
     @Column
-    private int answer_count;
+    private String pins_count;
     @Column
-    private int question_count;
+    private String logs_count;
     @Column
-    private int commercial_question_count;
+    private String voteup_count;
     @Column
-    private int articles_count;
+    private String thanked_count;
     @Column
-    private int favorite_count;
+    private String hosted_live_count;
     @Column
-    private int favorited_count;
+    private String participated_live_count;
     @Column
-    private int pins_count;
-    @Column
-    private int logs_count;
-    @Column
-    private int voteup_count;
-    @Column
-    private int thanked_count;
-    @Column
-    private int hosted_live_count;
-    @Column
-    private int participated_live_count;
-    @Column
-    private int marked_answers_count;
+    private String marked_answers_count;
     @Column
     private String marked_answers_text;
     @Column
-    private int following_columns_count;
+    private String following_columns_count;
     @Column
-    private int following_topic_count;
+    private String following_topic_count;
     @Column
-    private int following_question_count;
+    private String following_question_count;
     @Column
-    private int following_favlists_count;
+    private String following_favlists_count;
     @Column
-    private int vote_to_count;
+    private String vote_to_count;
     @Column
-    private int vote_from_count;
+    private String vote_from_count;
     @Column
-    private int thank_to_count;
+    private String thank_to_count;
     @Column
-    private int thank_from_count;
-    @Column
+    private String thank_from_count;
 
-    private String cover_url;
     @Column
-    private boolean is_bind_sina;
-    @Column
-    private String sina_weibo_name;
-    @Column
-    private String sina_weibo_url;
-
+    private  String status = "0";
 
 }

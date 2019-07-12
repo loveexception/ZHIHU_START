@@ -2,6 +2,8 @@ package com.maodajun.zhihu.bean;
 
 import lombok.Data;
 import org.apache.commons.lang3.time.DateFormatUtils;
+import org.nutz.lang.Lang;
+import org.nutz.lang.Strings;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -12,11 +14,37 @@ public class Pageing {
     int total;
     boolean isStart;
     boolean isEnd;
-    String urltemp;
+
     String nextpageurl;
 
-    long lastTime;
 
+    public Long getOffset(){
+       String[] array =nextpageurl.split( "offset=");
+       if(array!=null&&array[1]!=null&&Strings.isNumber(array[1])){
+           return Lang.str2number(array[1]).longValue();
+        }
+        return null;
+    }
+
+    public Long getLastTime(){
+        String[] array =nextpageurl.split( "after_id=");
+        if(array!=null&&array[1]!=null){
+            String[] time  = array[1].split("&");
+            if(time!=null&&time[0]!=null&&Strings.isNumber(time[0])) {
+                return Lang.str2number(time[0]).longValue();
+            }
+        }
+        return null;
+    }
+    public Long getNext(String str){
+        if(Strings.equals("offset",str)){
+            return getOffset();
+        }
+        if(Strings.equals("active",str)){
+            return getLastTime();
+        }
+        return 0l;
+    }
     public Calendar getYearMonthEnd(int year,int month){
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR,year);

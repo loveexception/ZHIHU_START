@@ -1,7 +1,11 @@
 package com.maodajun.zhihu.module;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
+import com.maodajun.zhihu.bean.Pageing;
+import com.maodajun.zhihu.service.UserService;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;
 import org.nutz.dao.QueryResult;
@@ -10,6 +14,7 @@ import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.lang.Strings;
 import org.nutz.lang.util.NutMap;
+import org.nutz.log.Logs;
 import org.nutz.mvc.adaptor.JsonAdaptor;
 import org.nutz.mvc.annotation.AdaptBy;
 import org.nutz.mvc.annotation.At;
@@ -23,34 +28,40 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
-@Api("user")
-@At("/user")
+
 @IocBean
-@Ok("json:full")
 public class UserModule {
 
     @Inject
     Dao dao;
-    
-    @ApiOperation(value = "获取用户总数", notes = "获取用户总数", httpMethod="GET", response=Long.class)
-    @Ok("raw")
-    @At
-    public long count() {
-        return dao.count(User.class);
-    }
-    
-    @ApiOperation(value = "查询用户列表", notes = "可分页", httpMethod="GET")
-    @ApiImplicitParams({
-        @ApiImplicitParam(name = "pageNumber", paramType="query", value = "起始页是1", dataType="int", required = false, defaultValue="1"),
-        @ApiImplicitParam(name = "pageSize", paramType="query", value = "每页数量", dataType="int", required = false, defaultValue="20"),
-        })
-    @At
-    public NutMap query(@Param("..")Pager pager) {
-        List<User> users = dao.query(User.class, Cnd.orderBy().desc("id"), pager);
-        pager.setRecordCount(dao.count(User.class));
-        return new NutMap("ok", true).setv("data", new QueryResult(users, pager));
-    }
-    
+    @Inject
+    UserService userService;
 
 
+
+    public void start() {
+
+        Cnd cnd = Cnd.NEW();
+        cnd.and("status","=","0");
+        //ExecutorService service = Executors.newFixedThreadPool(20);
+        while (true){
+            Pager pager = new Pager();
+            pager.setPageNumber(1);
+            pager.setPageSize(1);
+            User user = dao.query(User.class,cnd,pager).get(0);
+                String token = user.getUrl_token();
+              //  service.execute(new Runnable() {
+//                    @Override
+//                    public void run() {
+                        System.out.println(token);
+                        userService.doFollowing(token);
+//                    }
+//                });
+
+
+
+        }
+
+
+    }
 }
