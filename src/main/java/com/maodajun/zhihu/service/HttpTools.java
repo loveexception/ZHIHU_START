@@ -31,14 +31,14 @@ public class HttpTools {
 
 
 
-    public Object urlToJson(String url){
-
-        Response res =Http.get(url,2000);
-        if(res.isOK()){
-            return Json.fromJson(res.getReader());
-        }
-        return null;
-    }
+//    public Object urlToJson(String url){
+//
+//        Response res =Http.get(url,2000);
+//        if(res.isOK()){
+//            return Json.fromJson(res.getReader());
+//        }
+//        return null;
+//    }
 //    public Object urlToJson(String url){
 //        try {
 //
@@ -80,11 +80,9 @@ public class HttpTools {
 //        }
 //        return null;
 //    }
-
+//
 //    public Object urlToJson(String url)  {
-//        String temp =proxy();
-//        String[] array = temp.split(":");
-//        HttpHost proxy = new HttpHost(array[0], Lang.str2number(array[1]).intValue(), "HTTP");
+//        HttpHost proxy = proxy();
 //        //设置代理IP、端口、协议（请分别替换）
 //
 //        //把代理设置到请求配置
@@ -108,7 +106,10 @@ public class HttpTools {
 //
 //        return null;
 //    }
+    public Object urlToJson(String url){
 
+        return null;
+    }
     private Object getObject(CloseableHttpClient httpclient, HttpGet httpGet) throws IOException {
         //请求返回
         CloseableHttpResponse httpResp = httpclient.execute(httpGet);
@@ -117,7 +118,7 @@ public class HttpTools {
 
             int statusCode = httpResp.getStatusLine().getStatusCode();
             if (statusCode == HttpStatus.SC_OK) {
-                System.out.println("成功");
+                //System.out.println("成功");
                 String str = EntityUtils.toString(httpResp.getEntity(), "UTF-8");
 
                 return str;
@@ -133,12 +134,16 @@ public class HttpTools {
         return null;
     }
 
-    public String proxy(){
+    public HttpHost proxy(){
 
         Response response = Http.get("http://localhost:5010/get/");
 
+        String temp =response.getContent();
+        String[] array = temp.split(":");
+        HttpHost proxy = new HttpHost(array[0], Lang.str2number(array[1]).intValue(), "HTTP");
 
-        return response.getContent();
+
+        return proxy;
     }
 
 

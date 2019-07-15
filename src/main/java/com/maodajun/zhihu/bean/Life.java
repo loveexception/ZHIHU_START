@@ -19,7 +19,7 @@ public class Life {
 
         for (calendar.set(Calendar.DAY_OF_MONTH,1);
              calendar.getTimeInMillis() >  start ;
-             calendar.add(Calendar.MONTH,-1)) {
+             calendar.add(Calendar.MONTH,-6)) {
             LIFE.add(DateFormatUtils.ISO_DATE_FORMAT.format(calendar));
         }
 

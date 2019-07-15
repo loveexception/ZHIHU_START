@@ -6,7 +6,7 @@ var ioc = {
             depose : 'close'
         },
         fields : {
-            url : "jdbc:mysql://172.16.16.13:3306/zhihu_test",
+            url : "jdbc:mysql://localhost:3306/zhihu_test",
             username : "root",
                 password : "123456",
             testWhileIdle : true, // 非常重要,预防mysql的8小时timeout问题

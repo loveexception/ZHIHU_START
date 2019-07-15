@@ -64,4 +64,22 @@ public class UserModule {
 
 
     }
+
+    public void check() {
+
+
+        while (true){
+            User user = dao.query(User.class
+                    ,Cnd.NEW().and("status","=","1")
+                    ,new Pager(1,1))
+                    .get(0);
+
+            String token = user.getUrl_token();
+            userService.check(token);
+
+
+
+
+        }
+    }
 }

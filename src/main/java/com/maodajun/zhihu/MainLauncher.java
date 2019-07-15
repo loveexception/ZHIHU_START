@@ -28,7 +28,8 @@ public class MainLauncher {
         //dao.create(User.class, false);
         //dao.create(Active.class,false);
 
-        module.start();
+       // module.start();
+        module.check();
 
 
 

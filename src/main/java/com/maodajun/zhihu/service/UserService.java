@@ -1,8 +1,10 @@
 package com.maodajun.zhihu.service;
 
 import com.maodajun.zhihu.bean.Active;
+import com.maodajun.zhihu.bean.Life;
 import com.maodajun.zhihu.bean.Pageing;
 import com.maodajun.zhihu.bean.User;
+import org.nutz.castor.Castors;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;
 import org.nutz.ioc.impl.PropertiesProxy;
@@ -16,6 +18,7 @@ import org.nutz.mapl.Mapl;
 import org.nutz.trans.Atom;
 import org.nutz.trans.Trans;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -200,4 +203,24 @@ public class UserService {
         user.setStatus(s);
         dao.update(user);
     }
+
+    public void check(String token) {
+        Life life = new  Life();
+        life.init();
+        List<String> keys = life.getLIFE();
+        for (String key:keys) {
+
+            Date date =  Castors.me().castTo(key, Date.class);
+            long time = date.getTime();
+
+            Object obj =  active(token,time);
+            Pageing pageing =  activePage(Json.toJson(obj));
+
+            life.getMoons().put(key,pageing);
+        }
+        System.out.println(life);
+
+    }
+
+
 }

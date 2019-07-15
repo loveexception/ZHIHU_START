@@ -3,11 +3,14 @@ package com.maodajun.zhihu.bean;
 import com.maodajun.zhihu.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
-import org.nutz.http.Header;
 import org.nutz.http.Http;
 import org.nutz.http.Response;
 import org.nutz.json.Json;
-import org.nutz.lang.util.NutMap;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.util.List;
 
@@ -58,6 +61,24 @@ public class LifeTest {
         Response response = Http.get(url);
         
         System.out.println(response.getContent());
+    }
+
+    @Test
+    public void testGoogleSearch() throws InterruptedException {
+        // Optional, if not specified, WebDriver will search your path for chromedriver.
+        System.setProperty("webdriver.chrome.driver", "/Users/maodajun/Documents/project/zhihu/start/chromedriver");
+
+
+        ChromeOptions con =new ChromeOptions();
+        con.addArguments();
+        WebDriver driver = new ChromeDriver(con);
+        driver.get("http://www.baidu.com/");
+        Thread.sleep(5000);  // Let the user actually see something!
+        WebElement searchBox = driver.findElement(By.name("q"));
+        searchBox.sendKeys("ChromeDriver");
+        searchBox.submit();
+        Thread.sleep(5000);  // Let the user actually see something!
+        driver.quit();
     }
 
 }
