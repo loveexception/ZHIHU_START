@@ -9,7 +9,7 @@ import java.util.*;
 @Data
 public class Life {
      User user;
-    Map<String,Pageing> moons= new TreeMap();
+    Map<String, YearMoonTools> moons= new TreeMap();
     List<String> urls =new  ArrayList<String>();
     List<String> LIFE = new ArrayList();
 
@@ -19,7 +19,7 @@ public class Life {
 
         for (calendar.set(Calendar.DAY_OF_MONTH,1);
              calendar.getTimeInMillis() >  start ;
-             calendar.add(Calendar.MONTH,-6)) {
+             calendar.add(Calendar.MONTH,-1)) {
             LIFE.add(DateFormatUtils.ISO_DATE_FORMAT.format(calendar));
         }
 

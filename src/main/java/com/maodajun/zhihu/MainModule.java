@@ -17,8 +17,6 @@ public class MainModule {
 
     public static void main(String[]  arg){
         MainSetup setup = new MainSetup();
-
-
     }
 
 

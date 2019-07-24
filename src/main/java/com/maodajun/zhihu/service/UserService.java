@@ -1,9 +1,6 @@
 package com.maodajun.zhihu.service;
 
-import com.maodajun.zhihu.bean.Active;
-import com.maodajun.zhihu.bean.Life;
-import com.maodajun.zhihu.bean.Pageing;
-import com.maodajun.zhihu.bean.User;
+import com.maodajun.zhihu.bean.*;
 import org.nutz.castor.Castors;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;
@@ -15,21 +12,19 @@ import org.nutz.lang.Lang;
 import org.nutz.lang.segment.CharSegment;
 import org.nutz.lang.segment.Segment;
 import org.nutz.mapl.Mapl;
-import org.nutz.trans.Atom;
-import org.nutz.trans.Trans;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 @IocBean
 public class UserService {
     @Inject
-    Dao dao;
+    public Dao dao;
     @Inject
-    HttpTools httpTools;
+    public HttpTools httpTools;
     @Inject
-    protected PropertiesProxy conf;
+    public PropertiesProxy conf;
 
     public String activeUrl (String token,long time ){
         String url = conf.get("zhihu.active");
@@ -74,7 +69,7 @@ public class UserService {
     }
 
 
-    public Pageing followingPage(String json) {
+    public YearMoonTools followingPage(String json) {
         String mock = "{" +
                 "'paging.totals':'total'" +
                 ",'paging.is_start':'isStart'" +
@@ -85,7 +80,7 @@ public class UserService {
         Object change =Json.fromJson(mock);
         Object obj =Json.fromJson(json);
         obj = Mapl.convert(obj,change);
-        return Json.fromJson(Pageing.class,Json.toJson(obj));
+        return Json.fromJson(YearMoonTools.class,Json.toJson(obj));
 
 
     }
@@ -97,7 +92,7 @@ public class UserService {
         return users;
     }
 
-    public Pageing activePage(String json) {
+    public YearMoonTools activePage(String json) {
         String mock = "{" +
                 ",'paging.is_end':'isEnd'" +
                 ",'paging.next':'nextpageurl'" +
@@ -105,7 +100,7 @@ public class UserService {
         Object change =Json.fromJson(mock);
         Object obj =Json.fromJson(json);
         obj = Mapl.convert(obj,change);
-        return Json.fromJson(Pageing.class,Json.toJson(obj));
+        return Json.fromJson(YearMoonTools.class,Json.toJson(obj));
 
 
     }
@@ -140,36 +135,37 @@ public class UserService {
                 throw Lang.makeThrow("server lost",obj);
 
             }
-
-            Pageing pageing = followingPage(Json.toJson(obj));
+            YearMoonTools yearMoonTools = followingPage(Json.toJson(obj));
             //2. 循环查寻 end停止
-            List result = followingList(Json.toJson(obj));
-            if (pageing == null) {
+            // List result = followingList(Json.toJson(obj));
+            List<UserToken> my = new ArrayList();
+            if (yearMoonTools == null) {
 
-                throw Lang.makeThrow("user lost",pageing);
+                throw Lang.makeThrow("user lost", yearMoonTools);
             }
 
-            System.out.println(pageing.getTotal());
-            while (!pageing.isEnd()) {
+            System.out.println(yearMoonTools.getTotal());
+            while (!yearMoonTools.isEnd()) {
                 //3。 解析数据
-                obj = following(token, pageing.getNext("offset").intValue());
-                pageing = followingPage(Json.toJson(obj));
+                obj = following(token, yearMoonTools.getNext("offset").intValue());
+                yearMoonTools = followingPage(Json.toJson(obj));
                 List<User> temp =followingList(Json.toJson(obj));
                 for (int i = 0;  i < temp.size(); i++) {
-                    Object o = getUserBytoken(temp.get(i).getUrl_token());
-                    User user =  Json.fromJson(User.class,Json.toJson(o));
-                    result.add(user);
+                    //Object o = getUserBytoken(temp.get(i).getUrl_token());
+                    UserToken user =  new UserToken();
+                    user.setToken(temp.get(i).getUrl_token());
+                    my.add(user);
                 }
 
-                if (result.size() > 60) {
+                if (my.size() > 60) {
                     System.out.print(".");
                     //4。 一组入库
-                    doTrans(result);
-                    result.clear();
+                    doTrans(my);
+                    my.clear();
                 }
 
             }
-            doTrans(result);
+            doTrans(my);
             System.out.println(token);
             User user = dao.fetch(User.class, token);
 
@@ -186,14 +182,8 @@ public class UserService {
     }
 
     private List doTrans(List result) {
-        Trans.exec(new Atom() {
-            public void run() {
-                dao.insertOrUpdate(result);
 
-
-
-            }
-        });
+        dao.insertOrUpdate(result);
         return result;
     }
 
@@ -214,9 +204,9 @@ public class UserService {
             long time = date.getTime();
 
             Object obj =  active(token,time);
-            Pageing pageing =  activePage(Json.toJson(obj));
+            YearMoonTools yearMoonTools =  activePage(Json.toJson(obj));
 
-            life.getMoons().put(key,pageing);
+            life.getMoons().put(key, yearMoonTools);
         }
         System.out.println(life);
 

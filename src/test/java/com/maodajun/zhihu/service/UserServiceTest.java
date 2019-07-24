@@ -1,37 +1,20 @@
 package com.maodajun.zhihu.service;
 
-import com.maodajun.zhihu.MainLauncher;
-import com.maodajun.zhihu.bean.Pageing;
 import com.maodajun.zhihu.bean.User;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.model.InitializationError;
 import org.nutz.boot.NbApp;
 import org.nutz.dao.Dao;
-import org.nutz.http.Http;
 import org.nutz.ioc.Ioc;
-import org.nutz.ioc.IocLoader;
-import org.nutz.ioc.impl.NutIoc;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
-import org.nutz.ioc.loader.combo.ComboIocLoader;
-import org.nutz.ioc.loader.json.JsonLoader;
 import org.nutz.json.Json;
 import org.nutz.lang.Lang;
 import org.nutz.lang.util.NutMap;
-import org.nutz.mapl.Mapl;
-import org.nutz.mock.NutTestRunner;
-import org.nutz.mvc.annotation.IocBy;
 import org.nutz.boot.test.junit4.NbJUnit4Runner;
 
-import javax.jws.soap.SOAPBinding;
-
 import java.util.Date;
-
-import static org.junit.Assert.*;
 
 
 @RunWith(NbJUnit4Runner.class)

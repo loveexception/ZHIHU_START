@@ -31,9 +31,9 @@ public class LifeTest {
     @Test
     public void oldManFlollowingPage() {
         UserService service = new UserService();
-        Pageing pageing = service.followingPage(Mock.SHEN_FOLLOWING);//Mock.SHEN_FOLLOWING
-        assertEquals(pageing.getTotal(),973);
-        assertEquals(pageing.getNextpageurl().length(),63);
+        YearMoonTools yearMoonTools = service.followingPage(Mock.SHEN_FOLLOWING);//Mock.SHEN_FOLLOWING
+        assertEquals(yearMoonTools.getTotal(),973);
+        assertEquals(yearMoonTools.getNextpageurl().length(),63);
     }
 
 
@@ -70,6 +70,7 @@ public class LifeTest {
 
 
         ChromeOptions con =new ChromeOptions();
+
         con.addArguments();
         WebDriver driver = new ChromeDriver(con);
         driver.get("http://www.baidu.com/");

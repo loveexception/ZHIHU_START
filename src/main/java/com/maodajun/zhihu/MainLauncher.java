@@ -27,9 +27,12 @@ public class MainLauncher {
         // NB自身初始化完成后会调用这个方法
         //dao.create(User.class, false);
         //dao.create(Active.class,false);
+        new Thread(){
 
-       // module.start();
-        module.check();
+
+        }.start();
+       module.start();
+       // module.check();
 
 
 
