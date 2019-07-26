@@ -1,5 +1,6 @@
 package com.maodajun.zhihu.module;
 
+import com.maodajun.zhihu.bean.UserToken;
 import com.maodajun.zhihu.service.UserService;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;

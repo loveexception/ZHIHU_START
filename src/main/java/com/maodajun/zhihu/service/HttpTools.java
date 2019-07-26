@@ -17,6 +17,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -39,12 +40,19 @@ public class HttpTools {
 
 
     public Object urlToJson(String url){
-        driver = init();
-        driver.get(url);
-        String str = driver.getPageSource();
+        String str = chooseHttpClient(url);
         String regEx_html="<[^>]+>";
         str = str.replaceAll(regEx_html,"");
         if(str.indexOf("请输入验证码进行验证")>0){
+            driver .get("http://zhihu.com/");
+
+            //WebDriverWait wait=new WebDriverWait(driver,30);
+
+            try {
+                Thread.sleep(20000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             driver.quit();;
             driver= null;
             return null;
@@ -56,6 +64,13 @@ public class HttpTools {
         }
         return Json.fromJson(str);
     }
+
+    private String chooseHttpClient(String url) {
+        driver = init();
+        driver.get(url);
+        return driver.getPageSource();
+    }
+
     private Object getObject(CloseableHttpClient httpclient, HttpGet httpGet) throws IOException {
         //请求返回
         CloseableHttpResponse httpResp = httpclient.execute(httpGet);
@@ -99,8 +114,22 @@ public class HttpTools {
         DesiredCapabilities capabilities = proxyOptions();
 
 
-        //driver = new ChromeDriver(capabilities);
-        //driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+//        driver = new ChromeDriver(capabilities);
+//        driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+//
+//        while(true){
+//            driver.get("http://baidu.com");
+//            String str =driver.getPageSource();
+//            if(str.indexOf("百度首页")>0){
+//                return driver;
+//            }else {
+//                driver.quit();
+//                driver = null;
+//                continue;
+//
+//            }
+//        }
+
 
         driver = new ChromeDriver();
         return driver;

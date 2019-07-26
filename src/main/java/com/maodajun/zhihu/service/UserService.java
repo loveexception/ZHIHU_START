@@ -169,7 +169,7 @@ public class UserService {
             System.out.println(token);
             User user = dao.fetch(User.class, token);
 
-            user.setStatus("1");
+            user.setStatus("-1");
             dao.update(user);
         }catch (Exception e){
             errorUser(token, "-2");
@@ -188,7 +188,7 @@ public class UserService {
     }
 
     private void errorUser(String token, String s) {
-        User user = dao.fetch(User.class, token);
+        UserToken user = dao.fetch(UserToken.class, token);
 
         user.setStatus(s);
         dao.update(user);
