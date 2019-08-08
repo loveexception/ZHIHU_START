@@ -9,11 +9,14 @@ import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.json.Json;
 import org.nutz.lang.Lang;
+import org.nutz.lang.Strings;
 import org.nutz.lang.segment.CharSegment;
 import org.nutz.lang.segment.Segment;
 import org.nutz.mapl.Mapl;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -21,8 +24,9 @@ import java.util.List;
 public class UserService {
     @Inject
     public Dao dao;
-    @Inject
-    public HttpTools httpTools;
+
+    public HttpTools httpTools= new HttpTools();
+
     @Inject
     public PropertiesProxy conf;
 
@@ -44,20 +48,57 @@ public class UserService {
 
 
     public Object getUserBytoken(String token){
-        Object obj = httpTools.urlToJson(userUrl(token));
+        Object obj = httpTools.urlToJson2(userUrl(token));
         return obj;
     }
 
     public  Object  following(String token,int offset){
         String url =followUrl(token,offset);
-        Object obj = httpTools.urlToJson(url);
+        Object obj = httpTools.urlToJson2(url);
         return obj;
     }
     public  Object  active(String token, long time){
-        Object obj = httpTools.urlToJson(activeUrl(token,time));
+        Object obj = httpTools.urlToJson2(activeUrl(token,time));
         return obj;
     }
+    public  Object  active(String token) throws IOException {
+        long time =  Calendar.getInstance().getTimeInMillis();
+        String url = activeUrl(token,time);
+        Object obj = httpTools.urlToJson2(url);
+        YearMoonTools page=activePage(Json.toJson(obj));
+        List<Active> activeList = activeList(Json.toJson(obj));
+        if(Lang.isEmpty(activeList)){
+            activeList = new ArrayList<Active>();
+        }
+        while(true){
+             // obj = httpTools.urlToJson(page.getNextpageurl());
+             obj = httpTools.urlToJson2(page.getNextpageurl());
+             page = activePage(Json.toJson(obj));
 
+             List<Active> lists = activeList(Json.toJson(obj));
+             activeList.addAll(lists);
+             if(activeList.size()>100){
+                 dao.insert(activeList);
+                 activeList.clear();
+
+             }
+
+            if(page.isEnd()){
+                break;
+            }
+            if(Strings.isBlank(page.getNextpageurl())){
+                break;
+            }
+        }
+        dao.insert(activeList);
+
+        UserToken user = new UserToken();
+        user.setToken(token);
+        user.setStatus("5");
+        dao.update(user);
+
+        return user;
+    }
 
 
     public List<User> oldMan(List<User> newman){
@@ -96,6 +137,7 @@ public class UserService {
         String mock = "{" +
                 ",'paging.is_end':'isEnd'" +
                 ",'paging.next':'nextpageurl'" +
+                ",'paging.previous':'prevtopageurl'"+
                 "}";
         Object change =Json.fromJson(mock);
         Object obj =Json.fromJson(json);
@@ -147,7 +189,7 @@ public class UserService {
             System.out.println(yearMoonTools.getTotal());
             while (!yearMoonTools.isEnd()) {
                 //3。 解析数据
-                obj = following(token, yearMoonTools.getNext("offset").intValue());
+                obj = following(token, yearMoonTools.getOlderNext("offset").intValue());
                 yearMoonTools = followingPage(Json.toJson(obj));
                 List<User> temp =followingList(Json.toJson(obj));
                 for (int i = 0;  i < temp.size(); i++) {

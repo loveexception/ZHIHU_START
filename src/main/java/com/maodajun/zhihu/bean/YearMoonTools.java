@@ -16,6 +16,7 @@ public class YearMoonTools {
     boolean isEnd;
 
     String nextpageurl;
+    String prevtopageurl;
 
 
     public Long getOffset(){
@@ -36,7 +37,7 @@ public class YearMoonTools {
         }
         return null;
     }
-    public Long getNext(String str){
+    public Long getOlderNext(String str){
         if(Strings.equals("offset",str)){
             return getOffset();
         }
@@ -89,4 +90,17 @@ public class YearMoonTools {
     }
 
 
+    public Long getNewPrev(String active) {
+        return getFirstTime();
+    }
+    public Long getFirstTime(){
+        String[] array =prevtopageurl.split( "before_id=");
+        if(array!=null&&array[1]!=null){
+            String[] time  = array[1].split("&");
+            if(time!=null&&time[0]!=null&&Strings.isNumber(time[0])) {
+                return Lang.str2number(time[0]).longValue();
+            }
+        }
+        return null;
+    }
 }

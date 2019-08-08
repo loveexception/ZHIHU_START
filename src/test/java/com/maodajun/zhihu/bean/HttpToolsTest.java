@@ -18,7 +18,7 @@ public class HttpToolsTest {
 //        Response res = Http.get("https://www.zhihu.com/question/49296232");
 //        System.out.println( res.getContent());
         tools.init();
-        Object obj = tools.urlToJson("https://www.zhihu.com/api/v4/members/1005gel/followees?offset=0&limit=20");
+        Object obj = tools.urlToJson2("https://www.zhihu.com/api/v4/members/1005gel/followees?offset=0&limit=20");
         System.out.println(Json.toJson(obj));
 
         tools.quit();
@@ -30,7 +30,7 @@ public class HttpToolsTest {
 //        System.out.println( res.getContent());
         tools.init();
         for (int i = 0; i <100 ; i++) {
-            Object obj = tools.urlToJson("https://www.zhihu.com/api/v4/members/1005gel/followees?offset=0&limit=20");
+            Object obj = tools.urlToJson2("https://www.zhihu.com/api/v4/members/1005gel/followees?offset=0&limit=20");
             System.out.println(Json.toJson(obj));
         }
 

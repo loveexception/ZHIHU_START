@@ -1,6 +1,7 @@
 package com.maodajun.zhihu.module;
 
 import com.maodajun.zhihu.bean.*;
+import com.maodajun.zhihu.service.HttpTools;
 import com.maodajun.zhihu.service.UserService;
 import org.nutz.castor.Castors;
 import org.nutz.dao.Cnd;
@@ -13,6 +14,7 @@ import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.json.Json;
 import org.nutz.lang.Lang;
 
+import java.io.IOException;
 import java.util.*;
 
 
@@ -59,7 +61,7 @@ public class CheckModule {
         }
     }
 
-    public List<UserMoon> moonByToken(String token) {
+    public List<UserMoon> moonByToken(String token) throws IOException {
 
         Life life = new Life();
         life.init();
@@ -86,25 +88,30 @@ public class CheckModule {
 
         return moons;
     }
-
-    private UserMoon moons(String token,String time,  List<UserMoon> moons ) {
+    HttpTools httpTools = new  HttpTools();
+    public UserMoon moons(String token,String time,  List<UserMoon> moons ) throws IOException {
         
         long tt = Castors.me().castTo(time, Calendar.class).getTimeInMillis();
-        Object  obj = userService.active(token,tt);
+        String url = userService.activeUrl(token,tt);
+        System.out.println(url);
+        Object obj = httpTools.urlToJson2(url);
+        System.out.println(obj);
 
 
         YearMoonTools page = userService.activePage(Json.toJson(obj));
         List<Active>  actives = userService.activeList(Json.toJson(obj));
-        UserMoon moon = new UserMoon();
-        moon.setToken(token);
-        moon.setMoon(time);
+
+
         if(Lang.isEmpty(actives)){
             return null;
         }
         Active last  = actives.get(0);
         Active first = actives.get(actives.size()-1);
-        moon.setIs_end(""+page.isEnd());
 
+        UserMoon moon = new UserMoon();
+        moon.setToken(token);
+        moon.setMoon(time);
+        moon.setIs_end(""+page.isEnd());
         moon.setFirst(first.getCreated_time()+"");
         moon.setLast(last.getCreated_time()+"");
         return moon;

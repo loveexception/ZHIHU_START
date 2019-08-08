@@ -32,9 +32,11 @@ public class LifeTest {
     public void oldManFlollowingPage() {
         UserService service = new UserService();
         YearMoonTools yearMoonTools = service.followingPage(Mock.SHEN_FOLLOWING);//Mock.SHEN_FOLLOWING
+
         assertEquals(yearMoonTools.getTotal(),973);
         assertEquals(yearMoonTools.getNextpageurl().length(),63);
     }
+
 
 
 
@@ -49,6 +51,16 @@ public class LifeTest {
     public void oldManActivePage() {
         UserService service = new UserService();
         List<Active> actives = service.activeList(Mock.SHEN_ACTIVE);//Mock.SHEN_FOLLOWING
+        YearMoonTools moon = service.activePage(Mock.SHEN_ACTIVE);
+        assertNotNull(moon.getNextpageurl());
+        assertNotNull(moon.getPrevtopageurl());
+
+        System.out.println(moon.getNextpageurl());
+        System.out.println(moon.getPrevtopageurl());
+
+        System.out.println(moon.getOlderNext("active"));
+        System.out.println(moon.getNewPrev("active"));
+
         assertEquals(actives.size(),5);
         System.out.println(Json.toJson(actives.get(0)));
 

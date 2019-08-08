@@ -17,7 +17,10 @@ import org.nutz.ioc.impl.PropertiesProxy;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.ioc.loader.json.JsonLoader;
+import org.nutz.json.Json;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -51,15 +54,24 @@ public class CheckModuleTest extends Assert {
     }
 
     @Test
-    public void moon(){
+    public void moon() throws IOException {
 
-        List<UserMoon> moons =  module.moonByToken("shen");
-        System.out.println(moons);
+        List<UserMoon> moons =  module.moonByToken("ai-shi-li-san-san");
+        System.out.println(Json.toJson(moons));
         assertNotNull(moons);
 
     }
 
+    @Test
+    public void moons_bug_same_time() throws IOException {
 
+        UserMoon moons =  module.moons("ai-shi-li-san-san","2017-01-01",new ArrayList<>());
+        System.out.println(Json.toJson(moons));
+        moons =  module.moons("ai-shi-li-san-san","2015-01-01",new ArrayList<>());
+        System.out.println(Json.toJson(moons));
+        assertNotNull(moons);
+
+    }
 //    public static NbApp createNbApp() {
 //        return new NbApp().setMainClass(UserService.class).setPrintProcDoc(false);
 //    }
